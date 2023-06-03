@@ -103,7 +103,8 @@
 <body>
     <form method="POST">
             <?php
-                include_once('./src/addData.php');
+                include_once('./src/addData.php'); //chamado para mostrar o output da requisicao de cadastro
+                                                   //geralmente aparece quando ha algum erro.
             ?>
         <div class="mainScreen">
             <h2>CADASTRO</h2>
@@ -129,7 +130,7 @@
                 <th style="border-top-right-radius:15px;">Deletar</th>
             </tr>
                 <?php
-                    include_once("./src/showData.php");
+                    include_once("./src/showData.php"); //para pegar a funcao Datash
                     include_once("./src/config.php");
                     $verify = Datash($pdo);
                     for ($i = 0; $row = $verify->fetch(); $i++) {

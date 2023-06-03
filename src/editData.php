@@ -13,8 +13,8 @@
             margin: 0px;
         }
         form {
-            display: flex;
-            justify-content: center;
+            display:flex;
+            justify-content:center;
         }
         .container {
             width: 100vw;
@@ -67,47 +67,69 @@
             background-color:#62D967;
             cursor: pointer;
         }
+        .spinner {
+            border:6px solid rgba(0,0,0, 0.1);
+            border-left-color: rgba(235, 0, 0, 92);
+            height:60px;
+            width:60px;
+            border-radius:50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
     <form method="POST" action="saveEdit.php">
         <div class="container">
-            <div class="EditScreen">
-                <h2>ALTERAR DADOS</h2>
                 <?php
                     include_once("config.php");
                     $codigo = "";
-                    if (isset($_GET['codigo'])) {
-                        $codigo = $_GET['codigo'];
-                    } else {
+                    if (!isset($_GET['codigo'])) {
                         if ($_GET == null) {
-                            print("Você precisa selecionar alguém para alterar os dados!");
+                            echo "
+                                <script>
+                                    let div = document.querySelector(\".EditScreen\");
+                                    div.style.display = \"none\";
+                                </script>
+                            ";      // script em js que faz a div sumir
+                            echo "
+                                <div style=\"display:flex; align-items:center; flex-direction:column;\">
+                                    <h1 style=\"color:#191919;font-family: Roboto, sans-serif; \">Acesso negado, voce nao selecionou ninguem❌</h1>
+                                    <div class=\"spinner\"></div>
+                                </div>
+                            ";
                             header("Refresh:2; Url=./../index.php");
                         }
-                    }
-                    try {
-                        $fetching = $pdo->prepare("SELECT nome, cpf, celular from clientes where codigo=".$codigo."");
-                        $fetching->execute();
-                        $fetchData = $fetching->fetch();
-
-                    } catch (Exception $error) {
-                        print($error);
-                    }
-
-                    if ($fetchData != null) {
-                        echo "
-                            <span>Nome</span>
-                            <input value=\"".$fetchData['nome']."\" name=\"nome\" maxlenght=\"100\">
-                            <span>Celular</span>
-                            <input value=\"".$fetchData['celular']."\" name=\"celular\">
-                            <span>CPF</span>
-                            <input value=\"".$fetchData['cpf']."\" name=\"cpf\">
-                            <input type=\"hidden\" value=\"".$_GET['codigo']."\" name=\"codigo\">
-                        ";
+                    } else {
+                        $codigo = $_GET['codigo'];  //pega o valor do codigo da URL
+                        try {
+                            $fetching = $pdo->prepare("SELECT nome, cpf, celular from clientes where codigo=".$codigo."");
+                            $fetching->execute();
+                            $fetchData = $fetching->fetch();
+                        } catch (Exception $error) {
+                            print($error);
+                        }
+                        if ($fetchData != null) {
+                            echo "
+                                <div class=\"EditScreen\">
+                                    <h2>ALTERAR DADOS</h2>
+                                    <span>Nome</span>
+                                    <input value=\"".$fetchData['nome']."\" name=\"nome\" maxlenght=\"100\">
+                                    <span>Celular</span>
+                                    <input value=\"".$fetchData['celular']."\" name=\"celular\">
+                                    <span>CPF</span>
+                                    <input value=\"".$fetchData['cpf']."\" name=\"cpf\">
+                                    <input type=\"hidden\" value=\"".$_GET['codigo']."\" name=\"codigo\">
+                                    <button type=\"submit\">ALTERAR</button>
+                                </div>
+                            ";
+                        }
                     }
                 ?>  
-                <button type="submit">ALTERAR</button>
-            </div>
         </div>
     </form>
 </body>

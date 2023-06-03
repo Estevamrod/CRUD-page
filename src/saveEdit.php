@@ -45,12 +45,11 @@
     <?php
         include_once("config.php");
 
-        if ($_POST != null) {
+        if ($_POST != null) { //essa pagina e linkada com outra, se o post estiver vazio, significa que nao passamos pela pagina anterior a essa.
             $codigo = $_POST['codigo'];
             $nome = $_POST['nome'];
             $cpf = $_POST['cpf'];
             $celular = $_POST['celular'];
-
             try {
                 $sql = "UPDATE clientes set nome=:nome, cpf=:cpf, celular=:celular where codigo=:codigo";
                 $editing = $pdo->prepare($sql) -> execute (array(
@@ -62,7 +61,7 @@
             } catch(Exception $error) {
                 print($error);
             }
-            if ($editing != 0) {
+            if ($editing != 0) { //0 - false, 1 - true; vemos qual foi o resultado do update e colocamos em uma condicional
                 echo "
                     <div style=\"display:flex; align-items:center; flex-direction:column;\">
                         <h1 style=\"color:#191919;font-family: Roboto, sans-serif; \">Alteração realizada Sucesso ✅</h1>
@@ -71,14 +70,18 @@
                 ";
                 header("Refresh:2; URL=./../index.php");
             } else {
-                print("Não foi possível realizar a alteração");
+                echo "
+                    <div style=\"display:flex; align-items:center; flex-direction:column;\">
+                        <h1 style=\"color:#191919;font-family: Roboto, sans-serif; \">Nao foi possivel realizar a alteracao ❌</h1>
+                        <div class=\"spinner2\"></div>
+                    </div>
+                ";
                 header("Refresh:2; URL=editData.php");
             }
         } else {
-            // print("Você não deve estar aqui!");
             echo "
             <div style=\"display:flex; align-items:center; flex-direction:column;\">
-                <h1 style=\"color:#191919;font-family: Roboto, sans-serif; \">Acesso negado, você não deve estar aqui! ❌</h1>
+                <h1 style=\"color:#191919;font-family: Roboto, sans-serif; \">Acesso negado, você não deve estar aqui ❌</h1>
                 <div class=\"spinner2\"></div>
             </div>
             ";

@@ -106,11 +106,8 @@
         include("showData.php");
 
         if (!empty($_GET)) {
-            echo "
-
-            ";
-            if (isset($_POST['sim'])) {
-                $prim_key = $_GET['codigo'];
+            if (isset($_POST['sim'])) { // caso o usuario escolha "sim" na tela de confirmamento
+                $prim_key = $_GET['codigo']; //GET usado para pegar o valor do codigo que veio da URL
                 $req = delData($prim_key, $pdo);
                 if (!empty($req)) {
                     try {
@@ -139,7 +136,7 @@
                         header("Refresh:2; URL=./../index.php");
                     }
                 }
-            } else if (isset($_POST['nao'])) {
+            } else if (isset($_POST['nao'])) { //Caso o usuario escolha "nao" como opcao na tela de confirmamento
                 hideConfirmScreen();
                 echo "
                     <div style=\"display:flex; align-items:center; flex-direction:column;\">
