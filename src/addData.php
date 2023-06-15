@@ -2,23 +2,30 @@
 include_once("config.php");
 
 $nome = "";
-$celular = "";
 $cpf = "";
+$email = "";
+$senha = "";
+$sexo = "";
 
 if (isset($_POST['name'])) {
     $nome = $_POST['name'];
 }
-if (isset($_POST['celular'])) {
-    $celular = $_POST['celular'];
-}
 if (isset($_POST['cpf'])) {
     $cpf = $_POST['cpf'];
 }
+if (isset($_POST['email'])) {
+    $email = $_POST['email'];
+}
+if (isset($_POST['senha'])) {
+    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
+}
+if (isset($_POST['sexo'])){
+    $sexo = $_POST['sexo'];
+}
 
-
-function duplicateEntry ($nome, $pdo) {
+function duplicateEntry ($cpf, $pdo) {
     try {
-        $sql = "SELECT codigo FROM clientes where nome = \"$nome\"";
+        $sql = "SELECT cpf FROM usuario where cpf = \"$cpf\"";
         $verify = $pdo->prepare($sql);
         $verify->execute();
         return $verify;
@@ -27,8 +34,8 @@ function duplicateEntry ($nome, $pdo) {
     }
 }
 
-if ($nome != "" && $celular != "" && $cpf != "") {
-    $result = duplicateEntry($nome, $pdo);
+if ($nome != "" && $cpf != "" && $email != "" && $senha != "" && $sexo != "") {
+    $result = duplicateEntry($cpf, $pdo);
     $result = $result->fetch();
 
     if ($result != null) {
@@ -37,11 +44,13 @@ if ($nome != "" && $celular != "" && $cpf != "") {
         </div>";
     } else {
         try {
-            $stmt = $pdo->prepare('INSERT INTO clientes (nome, cpf, celular) VALUES (:nome, :cpf, :celular)');
+            $stmt = $pdo->prepare('INSERT INTO usuario (Nome, email, cpf, senha, sexo) VALUES (:nome, :email, :cpf, :senha, :sexo)');
             $stmt->execute(array(
                 'nome'=>$nome,
+                'email'=>$email,
                 'cpf'=>$cpf,
-                'celular'=>$celular
+                'senha'=>$senha,
+                'sexo'=>$sexo
             ));
             Header("Refresh:1");
         } catch (PDOException $error) {

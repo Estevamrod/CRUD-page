@@ -33,7 +33,7 @@
             padding: 20px;
             border-radius: 20px;
         }
-        .EditScreen input {
+        .EditScreen input, select {
             outline: none;
             border:1px solid #000;
             border-radius:10px;
@@ -59,12 +59,12 @@
             border:none;
             font-family: 'Roboto', sans-serif;
             font-size:12px;
-            background-color:#5BC960;
+            background-color:#32A82C;
             color:#FAFAFA;
             border-radius:10px;
         }
         .EditScreen button:hover {
-            background-color:#62D967;
+            background-color:#36B52F;
             cursor: pointer;
         }
         .spinner {
@@ -87,8 +87,7 @@
         <div class="container">
                 <?php
                     include_once("config.php");
-                    $codigo = "";
-                    if (!isset($_GET['codigo'])) {
+                    if (!isset($_GET['cpf'])) {
                         if ($_GET == null) {
                             echo "
                                 <script>
@@ -105,10 +104,9 @@
                             header("Refresh:2; Url=./../index.php");
                         }
                     } else {
-                        $codigo = $_GET['codigo'];  //pega o valor do codigo da URL
                         try {
-                            $fetching = $pdo->prepare("SELECT nome, cpf, celular from clientes where codigo=".$codigo."");
-                            $fetching->execute();
+                            $fetching = $pdo->prepare("SELECT nome, email, cpf, senha, sexo from usuario where cpf=:cpf");
+                            $fetching->execute(array("cpf"=>$_GET['cpf']));
                             $fetchData = $fetching->fetch();
                         } catch (Exception $error) {
                             print($error);
@@ -119,14 +117,27 @@
                                     <h2>ALTERAR DADOS</h2>
                                     <span>Nome</span>
                                     <input value=\"".$fetchData['nome']."\" name=\"nome\" maxlenght=\"100\">
-                                    <span>Celular</span>
-                                    <input value=\"".$fetchData['celular']."\" name=\"celular\">
                                     <span>CPF</span>
-                                    <input value=\"".$fetchData['cpf']."\" name=\"cpf\">
-                                    <input type=\"hidden\" value=\"".$_GET['codigo']."\" name=\"codigo\">
+                                    <input value=\"".$fetchData['cpf']."\" name=\"cpf\" placeholder=\"000.000.000-00\" pattern=\"\d{3}\.?\d{3}\.?\d{3}-?\d{2}\">
+                                    <span>Email</span>
+                                    <input value=\"".$fetchData['email']."\" name=\"email\" type=\"email\">
+                                    <span>Senha</span>
+                                    <input value=\"".$fetchData['senha']."\" name=\"senha\" type=\"password\">
+                                    <span>sexo</span>";
+                            if ($fetchData['sexo'] == "M") {
+                                echo "<select name=\"sexo\">
+                                            <option selected>Male</option>
+                                            <option>Female</option>
+                                        </select>";
+                            } else {
+                                echo "<select name=\"sexo\">
+                                            <option>Male</option>
+                                            <option selected>Female</option>
+                                        </select>";
+                            }
+                            echo "
                                     <button type=\"submit\">ALTERAR</button>
-                                </div>
-                            ";
+                                </div>";
                         }
                     }
                 ?>  

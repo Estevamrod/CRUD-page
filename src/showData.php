@@ -3,9 +3,8 @@
 
     function delData ($Prim_key,$pdo) {
         try {
-            $sql = "SELECT codigo, nome FROM clientes where codigo =".$Prim_key."";
-            $verify = $pdo->prepare($sql);
-            $verify->execute();
+            $verify = $pdo->prepare("SELECT cpf, nome FROM usuario where cpf =:cpf");
+            $verify->execute(array("cpf"=>$Prim_key));
             $fetch = $verify->fetch();
             return $fetch;
         } catch (Exception $error) {
@@ -15,7 +14,7 @@
 
     function Datash ($pdo) {
         try {
-            $sql = "SELECT * from clientes";
+            $sql = "SELECT * from usuario";
             $req = $pdo->prepare($sql);
             $req->execute();
             return $req;

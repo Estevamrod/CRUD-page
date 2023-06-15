@@ -48,7 +48,7 @@
             border-radius:10px;
         }
         .confirmScreen #sim {
-            background-color:#5BC960;
+            background-color:#32A82C;
         }
         .confirmScreen #nao {
             background-color:#BA1B13;
@@ -58,7 +58,7 @@
             cursor: pointer;
         }
         .confirmScreen #sim:hover {
-            background-color:#62D967;
+            background-color:#36B52F;
             cursor: pointer;
         }
         .spinner {
