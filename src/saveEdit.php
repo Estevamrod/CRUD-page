@@ -97,8 +97,7 @@
         if ($_POST != null) { //essa pagina e linkada com outra, se o post estiver vazio, significa que nao passamos pela pagina anterior a essa.
             if ($_POST['nome'] != "" && $_POST['senha'] != "" && $_POST['cpf'] != ""  && $_POST['email'] != "" && $_POST['sexo'] != "") {
                 try {
-                    $cpf = $_POST['cpf'];
-                    if (delData($cpf,$pdo) == null) {
+                    if ($_POST['cpf'] == $_POST['cpf_origin']) {
                         $editing = $pdo->prepare("UPDATE usuario set nome=:nome, cpf=:cpf, email=:email, senha=:senha, sexo=:sexo where cpf=:cpf") -> execute (array(
                             "nome" => $_POST['nome'],
                             "cpf" => $_POST['cpf'],
@@ -106,18 +105,31 @@
                             "senha" => password_hash($_POST['senha'], PASSWORD_DEFAULT),
                             "sexo" => $_POST['sexo']
                         ));
+                    } else {
+                        $cpf = $_POST['cpf'];
+                        $req = delData($cpf, $pdo);
+                        if (empty($req)) {
+                            $editing = $pdo->prepare("UPDATE usuario set nome=:nome, cpf=:cpf, email=:email, senha=:senha, sexo=:sexo where cpf=:cpf_cond") -> execute (array(
+                                "nome" => $_POST['nome'],
+                                "cpf" => $_POST['cpf'],
+                                "email" => $_POST['email'],
+                                "senha" => password_hash($_POST['senha'], PASSWORD_DEFAULT),
+                                "sexo" => $_POST['sexo'],
+                                "cpf_cond"=> $_POST['cpf_origin']
+                            ));
+                        }
                     }
                 } catch(Exception $error) {
                     print($error);
                 }
-                if ($editing != 0) { //0 - false, 1 - true; vemos qual foi o resultado do update e colocamos em uma condicional
+                if ((!empty($editing)) and $editing != 0) { //0 - false, 1 - true; vemos qual foi o resultado do update e colocamos em uma condicional
                     echo "
                         <div style=\"display:flex; align-items:center; flex-direction:column;\">
                             <h1 style=\"color:#191919;font-family: Roboto, sans-serif; \">Alteração realizada Sucesso ✅</h1>
                             <div class=\"spinner\"></div>
                         </div>
                     ";
-                    // header("Refresh:2; URL=./../index.php");
+                    header("Refresh:2; URL=./../index.php");
                 } else {
                     echo "
                         <div style=\"display:flex; align-items:center; flex-direction:column;\">
@@ -125,7 +137,7 @@
                             <div class=\"spinner2\"></div>
                         </div>
                     ";
-                    // header("Refresh:2; URL=editData.php");
+                    header("Refresh:2; URL=editData.php?cpf=".$_POST['cpf_origin']);
                 }
             } else {
                     echo "
@@ -134,11 +146,7 @@
                         <div class=\"spinner2\"></div>
                     </div>
                     ";
-                    // if ($_POST['cpf'] != "") {
-                    //     header("Refresh:2; URL=editData.php?cpf=".$_POST['cpf']."");
-                    // } else {
-                    //     header("Refresh:2; URL=./../index.php");
-                    // }
+                    header("Refresh:2; URL=editData.php?cpf=".$_POST['cpf_origin']);
             }
         } else {
             echo "
@@ -147,7 +155,7 @@
                 <div class=\"spinner2\"></div>
             </div>
             ";
-            // header("Refresh:2; URL=./../index.php");
+            header("Refresh:2; URL=./../index.php");
         }
     ?>
 </body>

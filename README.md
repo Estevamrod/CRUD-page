@@ -1,4 +1,4 @@
-#Trabalho
+## Trabalho baseado em PHP e MySQL
 
-um trabalho pedido pelo professor em sala de aula, entretanto ele (professor) esta passando de um jeito simples e demorado
-portanto, decidi tentar fazer o CRUD sozinho e esse foi o resultado.
+A princípio, o trabalho era apenas um exemplo em aula, entretanto como estava demorando muito e a explicação nada boa, decidi fazer por conta própria.
+

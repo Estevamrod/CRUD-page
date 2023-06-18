@@ -23,11 +23,11 @@ if (isset($_POST['sexo'])){
     $sexo = $_POST['sexo'];
 }
 
-function duplicateEntry ($cpf, $pdo) {
+function duplicateEntry ($sec_key, $pdo) {
     try {
-        $sql = "SELECT cpf FROM usuario where cpf = \"$cpf\"";
+        $sql = "SELECT cpf FROM usuario where cpf=:cpf";
         $verify = $pdo->prepare($sql);
-        $verify->execute();
+        $verify->execute(array("cpf"=>$sec_key));
         return $verify;
     } catch (PDOException $error) {
         echo 'Error: '.$error->getMessage();
@@ -38,7 +38,7 @@ if ($nome != "" && $cpf != "" && $email != "" && $senha != "" && $sexo != "") {
     $result = duplicateEntry($cpf, $pdo);
     $result = $result->fetch();
 
-    if ($result != null) {
+    if (!empty($result)) {
         echo "<div style=\"text-align:center; background-color:#C3001B;margin-bottom:10px;color:#fff;border-radius:8px;padding:10px\">
             <b>Você não pode cadastrar esse nome!</b>
         </div>";

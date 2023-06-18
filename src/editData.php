@@ -85,62 +85,63 @@
 <body>
     <form method="POST" action="saveEdit.php">
         <div class="container">
-                <?php
-                    include_once("config.php");
-                    if (!isset($_GET['cpf'])) {
-                        if ($_GET == null) {
-                            echo "
-                                <script>
-                                    let div = document.querySelector(\".EditScreen\");
-                                    div.style.display = \"none\";
-                                </script>
-                            ";      // script em js que faz a div sumir
-                            echo "
-                                <div style=\"display:flex; align-items:center; flex-direction:column;\">
-                                    <h1 style=\"color:#191919;font-family: Roboto, sans-serif; \">Acesso negado, voce nao selecionou ninguem❌</h1>
-                                    <div class=\"spinner\"></div>
-                                </div>
-                            ";
-                            header("Refresh:2; Url=./../index.php");
-                        }
-                    } else {
-                        try {
-                            $fetching = $pdo->prepare("SELECT nome, email, cpf, senha, sexo from usuario where cpf=:cpf");
-                            $fetching->execute(array("cpf"=>$_GET['cpf']));
-                            $fetchData = $fetching->fetch();
-                        } catch (Exception $error) {
-                            print($error);
-                        }
-                        if ($fetchData != null) {
-                            echo "
-                                <div class=\"EditScreen\">
-                                    <h2>ALTERAR DADOS</h2>
-                                    <span>Nome</span>
-                                    <input value=\"".$fetchData['nome']."\" name=\"nome\" maxlenght=\"100\">
-                                    <span>CPF</span>
-                                    <input value=\"".$fetchData['cpf']."\" name=\"cpf\" placeholder=\"000.000.000-00\" pattern=\"\d{3}\.?\d{3}\.?\d{3}-?\d{2}\">
-                                    <span>Email</span>
-                                    <input value=\"".$fetchData['email']."\" name=\"email\" type=\"email\">
-                                    <span>Senha</span>
-                                    <input value=\"".$fetchData['senha']."\" name=\"senha\" type=\"password\">
-                                    <span>sexo</span>";
-                            if ($fetchData['sexo'] == "M") {
-                                echo "<select name=\"sexo\">
-                                            <option selected>Male</option>
-                                            <option>Female</option>
-                                        </select>";
-                            } else {
-                                echo "<select name=\"sexo\">
-                                            <option>Male</option>
-                                            <option selected>Female</option>
-                                        </select>";
-                            }
-                            echo "
-                                    <button type=\"submit\">ALTERAR</button>
-                                </div>";
-                        }
+            <?php
+                include_once("config.php");
+                if (!isset($_GET['cpf'])) {
+                    if ($_GET == null) {
+                        echo "
+                            <script>
+                                let div = document.querySelector(\".EditScreen\");
+                                div.style.display = \"none\";
+                            </script>
+                        ";      // script em js que faz a div sumir
+                        echo "
+                            <div style=\"display:flex; align-items:center; flex-direction:column;\">
+                                <h1 style=\"color:#191919;font-family: Roboto, sans-serif; \">Acesso negado, voce nao selecionou ninguem❌</h1>
+                                <div class=\"spinner\"></div>
+                            </div>
+                        ";
+                        header("Refresh:2; Url=./../index.php");
                     }
-                ?>  
+                } else {
+                    try {
+                        $fetching = $pdo->prepare("SELECT nome, email, cpf, senha, sexo from usuario where cpf=:cpf");
+                        $fetching->execute(array("cpf"=>$_GET['cpf']));
+                        $fetchData = $fetching->fetch();
+                    } catch (Exception $error) {
+                        print($error);
+                    }
+                    if ($fetchData != null) {
+                        echo "
+                            <div class=\"EditScreen\">
+                                <h2>ALTERAR DADOS</h2>
+                                <span>Nome</span>
+                                <input value=\"".$fetchData['nome']."\" name=\"nome\" maxlenght=\"100\">
+                                <span>CPF</span>
+                                <input value=\"".$fetchData['cpf']."\" name=\"cpf\" placeholder=\"000.000.000-00\" pattern=\"\d{3}\.?\d{3}\.?\d{3}-?\d{2}\">
+                                <span>Email</span>
+                                <input value=\"".$fetchData['email']."\" name=\"email\" type=\"email\">
+                                <span>Senha</span>
+                                <input value=\"".$fetchData['senha']."\" name=\"senha\" type=\"password\">
+                                <span>sexo</span>";
+                        if ($fetchData['sexo'] == "M") {
+                            echo "<select name=\"sexo\">
+                                        <option selected>Male</option>
+                                        <option>Female</option>
+                                    </select>";
+                        } else {
+                            echo "<select name=\"sexo\">
+                                        <option>Male</option>
+                                        <option selected>Female</option>
+                                    </select>";
+                        }
+                        echo "
+                                <input type=\"hidden\" value=".$_GET['cpf']." name=\"cpf_origin\">
+                                <button type=\"submit\">ALTERAR</button>
+                            </div>";
+                    }
+                }
+            ?>  
         </div>
     </form>
 </body>

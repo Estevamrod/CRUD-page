@@ -3,7 +3,7 @@
 
     function delData ($Prim_key,$pdo) {
         try {
-            $verify = $pdo->prepare("SELECT cpf, nome FROM usuario where cpf =:cpf");
+            $verify = $pdo->prepare("SELECT cpf,nome FROM usuario where cpf =:cpf");
             $verify->execute(array("cpf"=>$Prim_key));
             $fetch = $verify->fetch();
             return $fetch;

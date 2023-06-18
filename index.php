@@ -115,10 +115,6 @@
 <body>
     <div class="container">
     <form method="POST">
-            <?php
-                include_once('./src/addData.php'); //chamado para mostrar o output da requisicao de cadastro
-                                                   //geralmente aparece quando ha algum erro.
-            ?>
         <div class="mainScreen">
             <h2>CADASTRO</h2>
             <span>Nome</span>
@@ -140,22 +136,22 @@
     </form>
     </div>
     <div class="table">
-    <?php
-        include_once("./src/config.php");
-        include_once("./src/showData.php");
-        $check = Datash($pdo);
-        if ($check->fetch() != null) {
-            echo "
-                <script>
-                    let div_table = document.querySelector(\".table\");
-                    let div_con = document.querySelector(\".container\");
-                    div_table.style.display = \"flex\";
-                    div_con.style.height = \"auto\";
-                    div_con.style.margin = \"10px 0px 0px 0px\";
-                </script>
-            ";
-        }
-    ?>
+        <?php
+            include_once("./src/config.php");
+            include_once("./src/showData.php");
+            $check = Datash($pdo);
+            if ($check->fetch() != null) {
+                echo "
+                    <script>
+                        let div_table = document.querySelector(\".table\");
+                        let div_con = document.querySelector(\".container\");
+                        div_table.style.display = \"flex\";
+                        div_con.style.height = \"auto\";
+                        div_con.style.margin = \"10px 0px 0px 0px\";
+                    </script>
+                ";
+            }
+        ?>
         <h2>TABELA</h2>
         <table>
             <tr>
@@ -185,6 +181,5 @@
                 ?>
         </table>
     </div>
-
 </body>
 </html>

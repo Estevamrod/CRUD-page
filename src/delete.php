@@ -107,13 +107,12 @@
 
         if (!empty($_GET)) {
             if (isset($_POST['sim'])) { // caso o usuario escolha "sim" na tela de confirmamento
-                $prim_key = $_GET['codigo']; //GET usado para pegar o valor do codigo que veio da URL
+                $prim_key = $_GET['cpf']; //GET usado para pegar o valor do codigo que veio da URL
                 $req = delData($prim_key, $pdo);
                 if (!empty($req)) {
                     try {
-                        $sql = "DELETE FROM clientes where codigo=".$req['codigo']."";
-                        $del_req = $pdo->prepare($sql);
-                        $sqlDel = $del_req->execute();
+                        $del_req = $pdo->prepare("DELETE FROM usuario where cpf=:cpf");
+                        $sqlDel = $del_req->execute(array("cpf"=>$req['cpf']));
                     } catch(Exception $error) {
                         print($error);
                     }
